@@ -120,7 +120,7 @@ const Layout = ({
 }, __jsx("a", null, "About"))), __jsx("li", null, __jsx(_routes__WEBPACK_IMPORTED_MODULE_1__["Link"], {
   route: "user",
   params: {
-    name: "mango"
+    name: "admin"
   }
 }, __jsx("a", null, "User page")))), children);
 

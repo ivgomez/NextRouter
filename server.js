@@ -38,34 +38,3 @@ app.prepare().then(() => {
 
   server.use(handler).listen(3000);
 });
-
-// const express = require("express");
-// const next = require("next");
-
-// const ENVIRONMENT = process.env.ENVIRONMENT || "development";
-// const PORT = process.env.PORT || 3000;
-// const app = next({ dev: ENVIRONMENT === "development" });
-// const handle = app.getRequestHandler();
-
-// app
-//   .prepare()
-//   .then(() => {
-//     const server = express();
-
-//     server.get("/user/:name", (req, res) => {
-//       app.render(req, res, "/user", { name: req.params.name });
-//     });
-
-//     server.get("*", (req, res) => {
-//       return handle(req, res);
-//     });
-
-//     server.listen(PORT, (err) => {
-//       if (err) throw err;
-//       console.log("ready on http://localhost:3000");
-//     });
-//   })
-//   .catch((ex) => {
-//     console.log(err.stack);
-//     process.exit(1);
-//   });

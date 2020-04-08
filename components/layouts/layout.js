@@ -15,7 +15,7 @@ const Layout = ({ children }) => (
         </Link>
       </li>
       <li>
-        <Link route="user" params={{ name: "mango" }}>
+        <Link route="user" params={{ name: "admin" }}>
           <a>User page</a>
         </Link>
       </li>
