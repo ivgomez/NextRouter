@@ -1,20 +1,21 @@
-import Link from "next/link";
+//import Link from "next/link";
+import { Link } from "../../routes";
 
 const Layout = ({ children }) => (
   <div>
     <ul>
       <li>
-        <Link href="/">
+        <Link route="/">
           <a>Home</a>
         </Link>
       </li>
       <li>
-        <Link href="/about">
+        <Link route="/about">
           <a>About</a>
         </Link>
       </li>
       <li>
-        <Link href="/user?name=mango" as="/user/mango">
+        <Link route="user" params={{ name: "mango" }}>
           <a>User page</a>
         </Link>
       </li>

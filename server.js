@@ -1,32 +1,71 @@
-const express = require("express");
-
 const next = require("next");
+const express = require("express");
+const routes = require("./routes");
+const app = next({ dev: process.env.NODE_ENV !== "production" });
+const handler = routes.getRequestHandler(app);
 
-const dev = process.env.NODE_ENV !== "production";
+// With express
+app.prepare().then(() => {
+  const server = express();
+  server.get("/sitemap.xml", function (req, res) {
+    res.header("Content-Type", "application/xml");
+    res.header("Content-Encoding", "gzip");
+    // if we have a cached entry send it
+    if (sitemap) {
+      res.send(sitemap);
+      return;
+    }
 
-const app = next({ dev });
+    try {
+      const smStream = new SitemapStream({ hostname: "https://www.corcoran.com/" });
+      const pipeline = smStream.pipe(createGzip());
 
-const handle = app.getRequestHandler();
+      // pipe your entries or directly write them.
+      smStream.write({ url: "/about/", changefreq: "daily", priority: 0.3 });
+      smStream.end();
 
-app
-  .prepare()
-  .then(() => {
-    const server = express();
-
-    server.get("/user/:name", (req, res) => {
-      app.render(req, res, "/user", { name: req.params.name });
-    });
-
-    server.get("*", (req, res) => {
-      return handle(req, res);
-    });
-
-    server.listen(3000, (err) => {
-      if (err) throw err;
-      console.log("ready on http://localhost:3000");
-    });
-  })
-  .catch((ex) => {
-    console.log(err.stack);
-    process.exit(1);
+      // cache the response
+      streamToPromise(pipeline).then((sm) => (sitemap = sm));
+      // stream write the response
+      pipeline.pipe(res).on("error", (e) => {
+        throw e;
+      });
+    } catch (e) {
+      console.error(e);
+      res.status(500).end();
+    }
   });
+
+  server.use(handler).listen(3000);
+});
+
+// const express = require("express");
+// const next = require("next");
+
+// const ENVIRONMENT = process.env.ENVIRONMENT || "development";
+// const PORT = process.env.PORT || 3000;
+// const app = next({ dev: ENVIRONMENT === "development" });
+// const handle = app.getRequestHandler();
+
+// app
+//   .prepare()
+//   .then(() => {
+//     const server = express();
+
+//     server.get("/user/:name", (req, res) => {
+//       app.render(req, res, "/user", { name: req.params.name });
+//     });
+
+//     server.get("*", (req, res) => {
+//       return handle(req, res);
+//     });
+
+//     server.listen(PORT, (err) => {
+//       if (err) throw err;
+//       console.log("ready on http://localhost:3000");
+//     });
+//   })
+//   .catch((ex) => {
+//     console.log(err.stack);
+//     process.exit(1);
+//   });

@@ -7,10 +7,15 @@ export default class UserPage extends Component {
     return query;
   }
 
+  constructor(props) {
+    super(props);
+  }
+
   render() {
+    //console.log(this.props);
     return (
       <div>
-        <h1>User page</h1>
+        <h1>{this.props.name} page</h1>
         <Layout></Layout>
       </div>
     );
